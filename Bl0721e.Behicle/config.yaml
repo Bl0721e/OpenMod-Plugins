@@ -1,0 +1,4 @@
+max_limit: 4
+init_limit: 1
+price_init: 1000
+price_increment: 500

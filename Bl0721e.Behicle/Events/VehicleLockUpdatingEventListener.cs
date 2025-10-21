@@ -1,5 +1,9 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using OpenMod.API.Eventing;
 using OpenMod.Unturned.Vehicles;
@@ -8,9 +12,6 @@ using OpenMod.Unturned.Vehicles.Events;
 using OpenMod.Unturned.Users;
 using OpenMod.API.Users;
 using SDG.Unturned;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Bl0721e.Behicle.Events
 {
@@ -31,6 +32,8 @@ namespace Bl0721e.Behicle.Events
 		{
 			string message = "";
 			Color color = Color.FromName("White");
+			InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(UInt32.Parse(@event.Vehicle.VehicleInstanceId));
+			var wasNaturallySpawned = typeof(InteractableVehicle).GetField("_wasNaturallySpawned", BindingFlags.Instance | BindingFlags.NonPublic);
 			if (!@event.IsLocking)
 			{
 				if (@event.Vehicle.Asset.VehicleType == "train")
@@ -60,6 +63,7 @@ namespace Bl0721e.Behicle.Events
 					if (count < limit)
 					{
 						message = $"你已锁定{count+1}/{limit}个载具";
+						wasNaturallySpawned.SetValue(interactableVehicle, false);
 					}
 					else
 					{
@@ -68,6 +72,10 @@ namespace Bl0721e.Behicle.Events
 						color = Color.FromName("Crimson");
 					}
 				}
+			}
+			else
+			{
+				wasNaturallySpawned.SetValue(interactableVehicle, true);
 			}
 			if (message == "")
 			{

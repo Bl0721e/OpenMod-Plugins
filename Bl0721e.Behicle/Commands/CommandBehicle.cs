@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using OpenMod.API.Commands;
 using OpenMod.Extensions.Economy.Abstractions;
@@ -37,9 +38,14 @@ namespace Bl0721e.Behicle.Commands
 				throw new CommandWrongUsageException(Context);
 			}
 			IReadOnlyCollection<IVehicle> VehicleDirectory = await m_VehicleDirectory.GetVehiclesAsync();
-			var count = VehicleDirectory.Count(v => {
+			var owned_count = VehicleDirectory.Count(v => {
 					InteractableVehicle Vehicle = VehicleManager.findVehicleByNetInstanceID(UInt32.Parse(v.VehicleInstanceId));
 					return Vehicle.lockedOwner.m_SteamID.ToString() == Context.Actor.Id && Vehicle.isLocked && !Vehicle.isExploded;
+					});
+			var natural_count = VehicleDirectory.Count(v => {
+					InteractableVehicle Vehicle = VehicleManager.findVehicleByNetInstanceID(UInt32.Parse(v.VehicleInstanceId));
+					var wasNaturallySpawned = (bool)typeof(InteractableVehicle).GetField("_wasNaturallySpawned", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Vehicle);
+					return wasNaturallySpawned && !Vehicle.isLocked && !Vehicle.isExploded;
 					});
 			int limit = await m_UserDataStore.GetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit");
 			int max_limit = m_Configuration.GetSection("max_limit").Get<int>();
@@ -51,7 +57,7 @@ namespace Bl0721e.Behicle.Commands
 				await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit", init_limit);
 				limit = init_limit;
 			}
-			string message = $"你当前拥有{count}/{limit}个载具";
+			string message = $"当前服务器内共有{natural_count}个野生载具\n你当前拥有{owned_count}/{limit}个载具";
 			if (limit < max_limit)
 			{
 				int price = price_init + price_increment * (limit - init_limit);

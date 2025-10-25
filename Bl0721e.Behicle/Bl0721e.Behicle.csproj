@@ -15,6 +15,9 @@
     <Version>0.2.17</Version>
     <InformationalVersion>0.2.17</InformationalVersion>
     <PackageVersion>0.2.17</PackageVersion>
+    <Author>Bl0721e</Author>
+    <RepositoryUrl>https://github.com/Bl0721e/Behicle.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

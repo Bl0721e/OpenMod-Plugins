@@ -8,7 +8,7 @@ using OpenMod.API.Plugins;
 
 // For more, visit https://openmod.github.io/openmod-docs/devdoc/guides/getting-started.html
 
-[assembly: PluginMetadata("Bl0721e.Behicle", DisplayName = "Behicle")]
+[assembly: PluginMetadata("Bl0721e.Behicle", DisplayName = "Bl0721e.Behicle")]
 namespace Bl0721e.Behicle
 {
     public class Behicle : OpenModUnturnedPlugin

@@ -7,11 +7,20 @@ namespace Bl0721e.Behicle.Events
 {
 	public class VehicleLockpickingEventListener : IEventListener<UnturnedVehicleLockpickingEvent>
 	{
-		public Task HandleEventAsync(object? sender, UnturnedVehicleLockpickingEvent @event)
+		public async Task HandleEventAsync(object? sender, UnturnedVehicleLockpickingEvent @event)
 		{
-			@event.IsCancelled = true;
-			@event.Instigator.PrintMessageAsync("此物品已被禁止使用", Color.FromName("Crimson"));
-			return Task.CompletedTask;
+			bool hasAccess = await @event.Vehicle.Ownership.HasAccessAsync(@event.Instigator);
+			string message = "";
+			if (!(@event.Vehicle.Ownership.HasOwner && @event.Vehicle.Vehicle.isLocked) || !hasAccess)
+			{
+				@event.IsCancelled = true;
+				message = "此物品已被禁止使用";
+			}
+			if (message == "")
+			{
+				return;
+			}
+			await @event.Instigator.PrintMessageAsync(message, Color.FromName("Crimson"));
 		}
 	}
 }

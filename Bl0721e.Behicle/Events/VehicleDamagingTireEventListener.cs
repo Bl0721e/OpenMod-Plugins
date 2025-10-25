@@ -18,18 +18,19 @@ namespace Bl0721e.Behicle.Events
 		{
 			m_UnturnedUserDirectory = unturnedUserDirectory;
 		}
-		public Task HandleEventAsync(object? sender, UnturnedVehicleDamagingTireEvent @event)
+		public async Task HandleEventAsync(object? sender, UnturnedVehicleDamagingTireEvent @event)
 		{
 			if (@event.Instigator != null && @event.Vehicle.Ownership.HasOwner && @event.Vehicle.Vehicle.isLocked)
 			{
 				CSteamID @Instigator = @event.Instigator ?? throw new InvalidOperationException("Object was null");
 				UnturnedPlayer Player = m_UnturnedUserDirectory.FindUser(@Instigator)!.Player;
-				if (Player.SteamId.m_SteamID.ToString() != @event.Vehicle.Ownership.OwnerPlayerId)
+				bool hasAccess = await @event.Vehicle.Ownership.HasAccessAsync(Player);
+				if (!hasAccess)
 				{
 					@event.IsCancelled = true;
 				}
 			}
-			return Task.CompletedTask;
+			return;
 		}
 	}
 }

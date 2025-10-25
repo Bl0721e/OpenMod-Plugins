@@ -12,9 +12,9 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <NoWarn>$(NoWarn);NU1701;NU1702;CS0436</NoWarn>
-    <Version>0.2.16</Version>
-    <InformationalVersion>0.2.16</InformationalVersion>
-    <PackageVersion>0.2.16</PackageVersion>
+    <Version>0.2.17</Version>
+    <InformationalVersion>0.2.17</InformationalVersion>
+    <PackageVersion>0.2.17</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

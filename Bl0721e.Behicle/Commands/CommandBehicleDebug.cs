@@ -51,10 +51,12 @@ namespace Bl0721e.Behicle.Commands
 			else
 			{
 				CSteamID dummyPlayer = default(CSteamID);
+				Player player = PlayerTool.getPlayer(unturnedUser.SteamId);
 				UnturnedVehicle unturnedVehicle = unturnedUser.Player.CurrentVehicle;
 				var position = unturnedVehicle.Transform.Position;
 				Vector3 v3 = new UnityEngine.Vector3(position.X, position.Y, position.Z);
-				message = $"{ClaimManager.checkCanBuild(v3, unturnedUser.SteamId, unturnedUser.SteamId, false)}, {ClaimManager.checkCanBuild(v3, dummyPlayer, dummyPlayer, false)}, {dummyPlayer.m_SteamID.ToString()}";
+				var decayTimer = typeof(InteractableVehicle).GetField("decayTimer", BindingFlags.Instance | BindingFlags.NonPublic);
+				message = $"{ClaimManager.checkCanBuild(v3, unturnedUser.SteamId, player.quests.groupID, false)}, {ClaimManager.checkCanBuild(v3, dummyPlayer, dummyPlayer, false)}, {dummyPlayer.m_SteamID.ToString()}, {decayTimer.GetValue(unturnedVehicle.Vehicle)}";
 			}
 			await Context.Actor.PrintMessageAsync(message);
 		}

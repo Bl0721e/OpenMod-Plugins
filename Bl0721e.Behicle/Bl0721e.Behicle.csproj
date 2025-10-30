@@ -12,9 +12,9 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <NoWarn>$(NoWarn);NU1701;NU1702;CS0436</NoWarn>
-    <Version>0.2.18</Version>
-    <InformationalVersion>0.2.18</InformationalVersion>
-    <PackageVersion>0.2.18</PackageVersion>
+    <Version>0.2.20</Version>
+    <InformationalVersion>0.2.20</InformationalVersion>
+    <PackageVersion>0.2.20</PackageVersion>
     <Author>Bl0721e</Author>
     <RepositoryUrl>https://github.com/Bl0721e/Behicle.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

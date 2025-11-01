@@ -62,15 +62,15 @@ namespace Bl0721e.Behicle.Commands
 				await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit", initLimit);
 				limit = initLimit;
 			}
-			string message = m_StringLocalizer[$"{locale:command:behicle}", new {naturalCount = naturalCount, totalCount = VehicleDirectory.Count(), ownedCount = ownedCount, limit = limit }]+"\n";
+			string message = m_StringLocalizer[$"{locale}:command:behicle", new {naturalCount = naturalCount, totalCount = VehicleDirectory.Count(), ownedCount = ownedCount, limit = limit }]+"\n";
 			if (limit < maxLimit)
 			{
 				int price = initPrice + priceIncrement * (limit - initLimit);
-				message = m_StringLocalizer[$"{locale:command:behiclePurchaseAvailable}", new {count = maxLimit - limit, price = price, currency = m_EconomyProvider.CurrencyName }];
+				message = message + m_StringLocalizer[$"{locale}:command:behiclePurchaseAvailable", new {count = maxLimit - limit, price = price, currency = m_EconomyProvider.CurrencyName }];
 			}
 			else
 			{
-				message = m_StringLocalizer[$"{locale:command:behicleExceededMaxLimit}", new {limit = limit, maxLimit = maxLimit}];
+				message = message + m_StringLocalizer[$"{locale}:command:behicleExceededMaxLimit", new {limit = limit, maxLimit = maxLimit}];
 			}
 			await Context.Actor.PrintMessageAsync(message, Color.FromName("White"));
 		}

@@ -63,7 +63,7 @@ namespace Bl0721e.Behicle.Commands
 			Color color = Color.FromName("White");
 			if (limit == maxLimit)
 			{
-				message = m_StringLocalizer[$"{locale:command:behicleExceededMaxLimit}", new { limit = limit, maxLimit = maxLimit }];
+				message = m_StringLocalizer[$"{locale}:command:behicleExceededMaxLimit", new { limit = limit, maxLimit = maxLimit }];
 			}
 			else
 			{
@@ -74,13 +74,13 @@ namespace Bl0721e.Behicle.Commands
 				catch (NotEnoughBalanceException)
 				{
 					var balance = await m_EconomyProvider.GetBalanceAsync(Context.Actor.Id, KnownActorTypes.Player);
-					message = m_StringLocalizer[$"{locale:command:behiclePurchaseFailed}", new { balance = balance, price = price }];
+					message = m_StringLocalizer[$"{locale}:command:behiclePurchaseFailed", new { balance = balance, price = price }];
 					color = Color.FromName("Crimson");
 				}
 				if(message == "")
 				{
 					await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, KnownActorTypes.Player, "behicle_limit", limit+1);
-					message = m_StringLocalizer[$"{locale:command:behiclePurchaseSuccess}", new { newLimit = limit + 1 }];
+					message = m_StringLocalizer[$"{locale}:command:behiclePurchaseSuccess", new { newLimit = limit + 1 }];
 				}
 			}
 			await Context.Actor.PrintMessageAsync(message, color);

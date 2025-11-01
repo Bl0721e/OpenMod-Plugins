@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
+using OpenMod.Core.Users;
+using OpenMod.API.Users;
 using OpenMod.API.Eventing;
 using OpenMod.Unturned.Vehicles;
 using OpenMod.Extensions.Games.Abstractions.Vehicles;
@@ -21,12 +24,14 @@ namespace Bl0721e.Behicle.Events
 		private readonly IUnturnedUserDirectory m_UnturnedUserDirectory;
 		private readonly IUserDataStore m_UserDataStore;
 		private readonly IConfiguration m_Configuration;
-		public VehicleLockUpdatingEventListener(IVehicleDirectory vehicleDirectory, IUnturnedUserDirectory unturnedUserDirectory, IUserDataStore iUserDataStore, IConfiguration configuration)
+		private readonly IStringLocalizer m_StringLocalizer;
+		public VehicleLockUpdatingEventListener(IVehicleDirectory vehicleDirectory, IUnturnedUserDirectory unturnedUserDirectory, IUserDataStore userDataStore, IConfiguration configuration, IStringLocalizer stringLocalizer)
 		{
 			m_VehicleDirectory = vehicleDirectory;
 			m_UnturnedUserDirectory = unturnedUserDirectory;
-			m_UserDataStore = iUserDataStore;
+			m_UserDataStore = userDataStore;
 			m_Configuration = configuration;
+			m_StringLocalizer = stringLocalizer;
 		}
 		public async Task HandleEventAsync(object? sender, UnturnedVehicleLockUpdatingEvent @event)
 		{
@@ -34,12 +39,14 @@ namespace Bl0721e.Behicle.Events
 			Color color = Color.FromName("White");
 			InteractableVehicle interactableVehicle = VehicleManager.findVehicleByNetInstanceID(UInt32.Parse(@event.Vehicle.VehicleInstanceId));
 			var wasNaturallySpawned = typeof(InteractableVehicle).GetField("_wasNaturallySpawned", BindingFlags.Instance | BindingFlags.NonPublic);
+			string fallbackLocale = m_Configuration.GetSection("locale:fallbackLocale").Get<string>()!;
+			string locale = await m_UserDataStore.GetUserDataAsync<string>(@event.Instigator.SteamId.m_SteamID.ToString(), KnownActorTypes.Player, "localePreference") ?? fallbackLocale;
 			if (!@event.IsLocking)
 			{
 				if (@event.Vehicle.Asset.VehicleType == "train")
 				{
 					@event.IsCancelled = true;
-					message = "你不能锁定这个载具";
+					message = m_StringLocalizer[$"{locale}:event:lockingNotAllowed"];
 					color = Color.FromName("Crimson");
 				}
 				else
@@ -62,13 +69,13 @@ namespace Bl0721e.Behicle.Events
 					}
 					if (count < limit)
 					{
-						message = $"你已锁定{count+1}/{limit}个载具";
+						message = m_StringLocalizer[$"{locale}:event:vehicleLocked", new { newCount = count + 1, limit = limit }];
 						wasNaturallySpawned.SetValue(interactableVehicle, false);
 					}
 					else
 					{
 						@event.IsCancelled = true;
-						message = $"你锁定的载具数量已达到上限({count}/{limit})\n使用命令'/behicle p'以扩充上限";
+						message = m_StringLocalizer[$"{locale}:event:vehicleExceededLimit", new { count = count, limit = limit }];
 						color = Color.FromName("Crimson");
 					}
 				}

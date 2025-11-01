@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Extensions.Games.Abstractions.Vehicles;
@@ -24,12 +25,14 @@ namespace Bl0721e.Behicle.Commands
 		private readonly IUserDataStore m_UserDataStore;
 		private readonly IEconomyProvider m_EconomyProvider;
 		private readonly IConfiguration m_Configuration;
-		public CommandBehiclePurchase(IVehicleDirectory vehicleDirectory,IUserDataStore userDataStore, IServiceProvider serviceProvider, IEconomyProvider economyProvider, IConfiguration configuration) : base(serviceProvider)
+		private readonly IStringLocalizer m_StringLocalizer;
+		public CommandBehiclePurchase(IVehicleDirectory vehicleDirectory,IUserDataStore userDataStore, IServiceProvider serviceProvider, IEconomyProvider economyProvider, IConfiguration configuration, IStringLocalizer stringLocalizer) : base(serviceProvider)
 		{
 			m_VehicleDirectory = vehicleDirectory;
 			m_UserDataStore = userDataStore;
 			m_EconomyProvider = economyProvider;
 			m_Configuration = configuration;
+			m_StringLocalizer = stringLocalizer;
 		}
 		protected override async Task OnExecuteAsync()
 		{
@@ -43,21 +46,24 @@ namespace Bl0721e.Behicle.Commands
 					return Vehicle.lockedOwner.m_SteamID.ToString() == Context.Actor.Id && Vehicle.isLocked && !Vehicle.isExploded;
 					});
 			int limit = await m_UserDataStore.GetUserDataAsync<int>(Context.Actor.Id, KnownActorTypes.Player, "behicle_limit");
-			int max_limit = m_Configuration.GetSection("max_limit").Get<int>();
-			int init_limit = m_Configuration.GetSection("init_limit").Get<int>();
-			int price_init = m_Configuration.GetSection("price_init").Get<int>();
-			int price_increment = m_Configuration.GetSection("price_increment").Get<int>();
-			if (limit == 0 && init_limit != 0)
+			int maxLimit = m_Configuration.GetSection("maxLimit").Get<int>();
+			int initLimit = m_Configuration.GetSection("initLimit").Get<int>();
+			int initPrice = m_Configuration.GetSection("initPrice").Get<int>();
+			int priceIncrement = m_Configuration.GetSection("priceIncrement").Get<int>();
+			string fallbackLocale = m_Configuration.GetSection("locale:fallbackLocale").Get<string>()!;
+			string locale = await m_UserDataStore.GetUserDataAsync<string>(Context.Actor.Id, KnownActorTypes.Player, "localePreference") ?? fallbackLocale;
+
+			if (limit == 0 && initLimit != 0)
 			{
-				await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit", init_limit);
-				limit = init_limit;
+				await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit", initLimit);
+				limit = initLimit;
 			}
-			int price = price_init + price_increment * (limit - init_limit);
+			int price = initPrice + priceIncrement * (limit - initLimit);
 			string message = "";
 			Color color = Color.FromName("White");
-			if (limit == max_limit)
+			if (limit == maxLimit)
 			{
-				message = message + $"你的载具上限已达最大值({limit}/{max_limit})";
+				message = m_StringLocalizer[$"{locale:command:behicleExceededMaxLimit}", new { limit = limit, maxLimit = maxLimit }];
 			}
 			else
 			{
@@ -68,13 +74,13 @@ namespace Bl0721e.Behicle.Commands
 				catch (NotEnoughBalanceException)
 				{
 					var balance = await m_EconomyProvider.GetBalanceAsync(Context.Actor.Id, KnownActorTypes.Player);
-					message = $"你的余额不足({balance}/{price})";
+					message = m_StringLocalizer[$"{locale:command:behiclePurchaseFailed}", new { balance = balance, price = price }];
 					color = Color.FromName("Crimson");
 				}
 				if(message == "")
 				{
 					await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, KnownActorTypes.Player, "behicle_limit", limit+1);
-					message = $"兑换完成, 你现在的载具锁定上限是{limit+1}";
+					message = m_StringLocalizer[$"{locale:command:behiclePurchaseSuccess}", new { newLimit = limit + 1 }];
 				}
 			}
 			await Context.Actor.PrintMessageAsync(message, color);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using OpenMod.API.Commands;
 using OpenMod.Extensions.Economy.Abstractions;
 using OpenMod.Extensions.Games.Abstractions.Vehicles;
@@ -24,12 +25,14 @@ namespace Bl0721e.Behicle.Commands
 		private readonly IUserDataStore m_UserDataStore;
 		private readonly IEconomyProvider m_EconomyProvider;
 		private readonly IConfiguration m_Configuration;
-		public CommandBehicle(IVehicleDirectory vehicleDirectory,IUserDataStore userDataStore, IServiceProvider serviceProvider, IEconomyProvider economyProvider, IConfiguration configuration) : base(serviceProvider)
+		private readonly IStringLocalizer m_StringLocalizer;
+		public CommandBehicle(IVehicleDirectory vehicleDirectory,IUserDataStore userDataStore, IServiceProvider serviceProvider, IEconomyProvider economyProvider, IConfiguration configuration, IStringLocalizer stringLocalizer) : base(serviceProvider)
 		{
 			m_VehicleDirectory = vehicleDirectory;
 			m_UserDataStore = userDataStore;
 			m_EconomyProvider = economyProvider;
 			m_Configuration = configuration;
+			m_StringLocalizer = stringLocalizer;
 		}
 		protected override async Task OnExecuteAsync()
 		{
@@ -38,34 +41,36 @@ namespace Bl0721e.Behicle.Commands
 				throw new CommandWrongUsageException(Context);
 			}
 			IReadOnlyCollection<IVehicle> VehicleDirectory = await m_VehicleDirectory.GetVehiclesAsync();
-			var owned_count = VehicleDirectory.Count(v => {
+			var ownedCount = VehicleDirectory.Count(v => {
 					InteractableVehicle Vehicle = VehicleManager.findVehicleByNetInstanceID(UInt32.Parse(v.VehicleInstanceId));
 					return Vehicle.lockedOwner.m_SteamID.ToString() == Context.Actor.Id && Vehicle.isLocked && !Vehicle.isExploded;
 					});
-			var natural_count = VehicleDirectory.Count(v => {
+			var naturalCount = VehicleDirectory.Count(v => {
 					InteractableVehicle Vehicle = VehicleManager.findVehicleByNetInstanceID(UInt32.Parse(v.VehicleInstanceId));
 					var wasNaturallySpawned = (bool)typeof(InteractableVehicle).GetField("_wasNaturallySpawned", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Vehicle);
 					return wasNaturallySpawned && !Vehicle.isLocked && !Vehicle.isExploded;
 					});
 			int limit = await m_UserDataStore.GetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit");
-			int max_limit = m_Configuration.GetSection("max_limit").Get<int>();
-			int init_limit = m_Configuration.GetSection("init_limit").Get<int>();
-			int price_init = m_Configuration.GetSection("price_init").Get<int>();
-			int price_increment = m_Configuration.GetSection("price_increment").Get<int>();
-			if (limit == 0 && init_limit != 0)
+			int maxLimit = m_Configuration.GetSection("maxLimit").Get<int>();
+			int initLimit = m_Configuration.GetSection("initLimit").Get<int>();
+			int initPrice = m_Configuration.GetSection("initPrice").Get<int>();
+			int priceIncrement = m_Configuration.GetSection("priceIncrement").Get<int>();
+			string fallbackLocale = m_Configuration.GetSection("locale:fallbackLocale").Get<string>()!;
+			string locale = await m_UserDataStore.GetUserDataAsync<string>(Context.Actor.Id, KnownActorTypes.Player, "localePreference") ?? fallbackLocale;
+			if (limit == 0 && initLimit != 0)
 			{
-				await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit", init_limit);
-				limit = init_limit;
+				await m_UserDataStore.SetUserDataAsync<int>(Context.Actor.Id, "Player", "behicle_limit", initLimit);
+				limit = initLimit;
 			}
-			string message = $"当前服务器内共有{natural_count}个野生载具\n你当前拥有{owned_count}/{limit}个载具";
-			if (limit < max_limit)
+			string message = m_StringLocalizer[$"{locale:command:behicle}", new {naturalCount = naturalCount, totalCount = VehicleDirectory.Count(), ownedCount = ownedCount, limit = limit }]+"\n";
+			if (limit < maxLimit)
 			{
-				int price = price_init + price_increment * (limit - init_limit);
-				message = message + $"\n使用命令'/behicle p'解锁更多载具上限\n还可以解锁{max_limit - limit}个, 下一次需要花费{price}{m_EconomyProvider.CurrencyName}";
+				int price = initPrice + priceIncrement * (limit - initLimit);
+				message = m_StringLocalizer[$"{locale:command:behiclePurchaseAvailable}", new {count = maxLimit - limit, price = price, currency = m_EconomyProvider.CurrencyName }];
 			}
 			else
 			{
-				message = message + $"\n你的可锁定载具上限已达最大值({limit}/{max_limit})";
+				message = m_StringLocalizer[$"{locale:command:behicleExceededMaxLimit}", new {limit = limit, maxLimit = maxLimit}];
 			}
 			await Context.Actor.PrintMessageAsync(message, Color.FromName("White"));
 		}

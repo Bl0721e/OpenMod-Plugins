@@ -21,6 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bl0721e.Common" Version="1.0.0" />
     <PackageReference Include="OpenMod.Unturned" Version="3.8.10+a033121c" />
     <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>

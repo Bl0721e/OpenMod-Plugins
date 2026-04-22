@@ -1,0 +1,28 @@
+en:
+  event:
+    itemUsageProhibited: "Cannot use this on other player's vehicle"
+    currentHealth: "Health of vehicle: {health}"
+    damagingNotAllowed: "Cannot damage other player's vehicle"
+    lockingNotAllowed: "This vehicle cannot be locked"
+    vehicleLocked: "You have locked {newCount}/{limit} vehicles"
+    vehicleExceededLimit: "You have exceeded your vehicle limit({count}/{limit})\nExecute '/behicle p' to increase your limit"
+  command:
+      behicle: "There are currently {totalCount} vehicles total, {naturalCount} of them are unlocked\nYou now own {ownedCount}/{limit} vehicles"
+      behiclePurchaseAvailable: "Execute '/behicle p' to increase your vehicle limit\nYou can get {count} more till max limit\nNext purchase will cost {price}{currency}"
+      behicleExceededMaxLimit: "Your vehicle limit is already maxed"
+      behiclePurchaseFailed: "Insufficient balance({balance}/{price})"
+      behiclePurchaseSuccess: "Your new limit is now {newLimit}"
+zh:
+  event:
+    itemUsageProhibited: "无法对其他玩家的载具使用这个物品"
+    currentHealth: "载具当前生命值: {health}"
+    damagingNotAllowed: "你无法攻击其他玩家的载具"
+    lockingNotAllowed: "你不能锁定这个载具"
+    vehicleLocked: "你已锁定{newCount}/{limit}个载具"
+    vehicleExceededLimit: "你锁定的载具数量已达到上限({count}/{limit})\n使用命令'/behicle p'以扩充上限"
+  command:
+      behicle: "当前服务器内共有{totalCount}个载具, 其中{naturalCount}个未上锁\n你当前已锁定{ownedCount}/{limit}个载具"
+      behiclePurchaseAvailable: "使用命令'/behicle p'解锁更多载具上限\n还可以解锁{count}个, 下一次解锁将花费{price}{currency}"
+      behicleExceededMaxLimit: "你的载具上限已达到最大值({limit}/{maxLimit})"
+      behiclePurchaseFailed: "你的余额不足({balance}/{price})"
+      behiclePurchaseSuccess: "解锁完成, 现在的载具上限是{newLimit}"

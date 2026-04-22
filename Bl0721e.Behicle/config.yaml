@@ -1,0 +1,6 @@
+maxLimit: 4
+initLimit: 1
+initPrice: 500
+priceIncrement: 1000
+locale:
+  fallbackLocale: "en"

@@ -1,0 +1,10 @@
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.csproj.AssemblyReference.cache
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.GeneratedMSBuildEditorConfig.editorconfig
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.AssemblyInfoInputs.cache
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.AssemblyInfo.cs
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.csproj.CoreCompileInputs.cache
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/bin/Debug/netstandard2.1/Bl0721e.LibMultiLang.deps.json
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/bin/Debug/netstandard2.1/Bl0721e.LibMultiLang.dll
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/bin/Debug/netstandard2.1/Bl0721e.LibMultiLang.pdb
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.dll
+/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/Debug/netstandard2.1/Bl0721e.LibMultiLang.pdb

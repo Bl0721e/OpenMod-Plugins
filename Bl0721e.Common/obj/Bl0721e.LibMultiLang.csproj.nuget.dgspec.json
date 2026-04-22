@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/blockie/Documents/openmod/locale/Bl0721e.Common/Bl0721e.LibMultiLang.csproj": {}
+  },
+  "projects": {
+    "/home/blockie/Documents/openmod/locale/Bl0721e.Common/Bl0721e.LibMultiLang.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "/home/blockie/Documents/openmod/locale/Bl0721e.Common/Bl0721e.LibMultiLang.csproj",
+        "projectName": "Bl0721e.LibMultiLang",
+        "projectPath": "/home/blockie/Documents/openmod/locale/Bl0721e.Common/Bl0721e.LibMultiLang.csproj",
+        "packagesPath": "/home/blockie/.nuget/packages/",
+        "outputPath": "/home/blockie/Documents/openmod/locale/Bl0721e.Common/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/blockie/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1701",
+            "NU1702"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Legacy2CPSWorkaround": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "OpenMod.Unturned": {
+              "target": "Package",
+              "version": "[3.8.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.408/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

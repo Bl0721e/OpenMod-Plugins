@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # OpenMod-Plugins
 OpenMod/Unturned plugins
 =======
@@ -27,3 +28,6 @@ A OpenMod/Unturned plugin
 ## TODO:
 - make abandoned bases destructable
 >>>>>>> noraid/master
+=======
+Library for my other plugins
+>>>>>>> common/master

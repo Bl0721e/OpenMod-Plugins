@@ -1,0 +1,10 @@
+en:
+  locale:
+    displayLocaleList: "Usage: /lang <locale>\nAvailable Locales:\n{locales}"
+    localeNotAvailable: "Not a valid locale"
+    localeUpdateSuccess: "Your locale preference has been updated to {newLocale}"
+zh:
+  locale:
+    displayLocaleList: "格式: /lang <语言>\n可选的语言:\n{locales}"
+    localeNotAvailable: "你输入的不是有效的语言"
+    localeUpdateSuccess: "你的语言偏好已更改为{newLocale}"

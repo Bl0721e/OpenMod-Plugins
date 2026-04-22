@@ -1,0 +1,8 @@
+en:
+  damagingNotAllowed: "This buildable is protected"
+  currentHealth: "Current health of buildable: {health}"
+  nav: "This buildable is inside zombie activity area and will not be protected"
+zh:
+  damagingNotAllowed: "此建筑受到保护, 无法攻击"
+  currentHealth: "此建筑当前生命值: {health}"
+  nav: "此建筑位于僵尸活动区域内, 将不会受到任何保护"
